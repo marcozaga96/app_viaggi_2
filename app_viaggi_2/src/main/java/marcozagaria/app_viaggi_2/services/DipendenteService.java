@@ -34,8 +34,12 @@ public class DipendenteService {
     }
 
     public Dipendente saveDipendente(DipendenteDTO body) {
+        dipendenteRepository.findByEmail(body.email()).ifPresent(dipendente -> {
+            throw new BadRequestException("eamil " + body.email() + " gia in uso!");
+        });
         Dipendente newDipendente = new Dipendente(body.nome(), body.cognome(), body.email(), body.username());
         newDipendente.setAvatar("https://ui-avatars.com/api/?name=" + body.nome() + "+" + body.cognome());
+        newDipendente.setPassword(body.password());
         return dipendenteRepository.save(newDipendente);
     }
 
@@ -74,5 +78,9 @@ public class DipendenteService {
         // ... qua poi dovrei prendere l'url e salvarlo nel rispettivo utente
 
         return url;
+    }
+
+    public Dipendente findByEmail(String email) {
+        return dipendenteRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("L'utente con email " + email + " non è stato trovato"));
     }
 }

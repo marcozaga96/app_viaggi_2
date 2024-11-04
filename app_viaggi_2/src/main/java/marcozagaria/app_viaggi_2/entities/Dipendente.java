@@ -23,6 +23,7 @@ public class Dipendente {
     private String cognome;
     private String email;
     private String username;
+    private String password;
     private String avatar;
 
     public Dipendente(String nome, String cognome, String email, String username) {

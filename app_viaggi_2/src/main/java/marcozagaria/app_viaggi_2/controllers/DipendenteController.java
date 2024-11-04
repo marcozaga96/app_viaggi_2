@@ -33,12 +33,7 @@ public class DipendenteController {
         // Mettiamo dei valori di default per far si che non ci siano errori se il client non ci invia uno dei query parameters
         return dipendenteService.getAllDipendenteList(page, size, sortBy);
     }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Dipendente createDipendente(@RequestBody DipendenteDTO body) {
-        return dipendenteService.saveDipendente(body);
-    }
+    
 
     @GetMapping("/{Id}")
     public Dipendente cercaDipendenteId(@PathVariable UUID Id) {
