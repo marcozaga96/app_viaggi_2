@@ -1,5 +1,6 @@
 package marcozagaria.app_viaggi_2.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import marcozagaria.app_viaggi_2.enums.Ruolo;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @NoArgsConstructor
+@JsonIgnoreProperties({"password", "email", "ruolo", "authorities", "accountNonLocked", "credentialsNonExpired", "accountNonExpired", "enabled"})
 public class Dipendente implements UserDetails {
     @Id
     @GeneratedValue()

@@ -5,6 +5,7 @@ import marcozagaria.app_viaggi_2.exeption.UnauthorizedException;
 import marcozagaria.app_viaggi_2.payloads.LoginDTO;
 import marcozagaria.app_viaggi_2.security.JWT;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,11 +14,14 @@ public class LoginService {
     private DipendenteService dipendenteService;
     @Autowired
     private JWT jwt;
+    @Autowired
+    private PasswordEncoder bcrypt;
+
 
     public String controllaCredenziali(LoginDTO body) {
 // 1.1 Cerco nel DB se esiste un utente con l'email fornita
         Dipendente found = dipendenteService.findByEmail(body.email());
-        if (found.getPassword().equals(body.password())) {
+        if (bcrypt.matches(body.password(), found.getPassword())) {
             // 2. Se sono OK --> Genero il token
             String accessToken = jwt.createToken(found);
             // 3. Ritorno il token
