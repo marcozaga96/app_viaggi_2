@@ -3,6 +3,7 @@ package marcozagaria.app_viaggi_2.exeption;
 import marcozagaria.app_viaggi_2.payloads.ExceptionDTO;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -30,6 +31,12 @@ public class ExceptionsHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
     public ExceptionDTO handleUnauthorized(UnauthorizedException ex) {
         return new ExceptionDTO(ex.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN) // 403
+    public ExceptionDTO handleForbidden(AuthorizationDeniedException ex) {
+        return new ExceptionDTO("Non hai i permessi per accedere", LocalDateTime.now());
     }
 
     @ExceptionHandler(NotFoundException.class)

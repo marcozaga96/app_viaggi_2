@@ -36,4 +36,8 @@ public class JWT {
             throw new UnauthorizedException("Problemi con il token! Per favore effettua di nuovo il login!");
         }
     }
+
+    public String getToken(String token) {
+        return Jwts.parser().verifyWith(Keys.hmacShaKeyFor(secret.getBytes())).build().parseSignedClaims(token).getPayload().getSubject();// prendo l'id dal Subject preso sopra nel builder
+    }
 }
