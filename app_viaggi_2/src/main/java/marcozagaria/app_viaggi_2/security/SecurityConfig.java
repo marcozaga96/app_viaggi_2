@@ -28,6 +28,11 @@ public class SecurityConfig {
         // Disabilitiamo il 401 che riceviamo di default
         httpSecurity.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry.requestMatchers("/**").permitAll());
+
+        /* parte inerente al collegamento tra il db e la pagina web
+        //httpSecurity.cors(Customizer.withDefaults()); // <-- OBBLIGATORIA SE VOGLIAMO CONFIGURARE I CORS GLOBALMENTE CON UN BEAN
+        
+         */
         return httpSecurity.build();
     }
 
@@ -35,4 +40,20 @@ public class SecurityConfig {
     PasswordEncoder getBCrypt() {
         return new BCryptPasswordEncoder(12);
     }
+
+    /*  parte inerente al collegamento tra il db e la pagina web
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://www.mywonderfulfrontend.com"));
+        // Mi creo una whitelist di uno o più indirizzi FRONTEND che voglio che possano accedere a questo backend.
+        // Volendo (anche se rischioso) potrei permettere l'accesso a tutti mettendo "*"
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Applica ad ogni URL del mio backend la configurazione di sopra
+        return source;
+    } // Non dimentichiamoci di aggiungere httpSecurity.cors(Customizer.withDefaults()); alla filter chain!!!!
+
+     */
 }
