@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import marcozagaria.app_viaggi_2.entities.Dipendente;
 import marcozagaria.app_viaggi_2.exeption.BadRequestException;
 import marcozagaria.app_viaggi_2.exeption.NotFoundException;
+import marcozagaria.app_viaggi_2.mailgun.MailgunSender;
 import marcozagaria.app_viaggi_2.payloads.DipendenteDTO;
 import marcozagaria.app_viaggi_2.repositories.DipendenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class DipendenteService {
     @Autowired
     private PasswordEncoder bcrypt;
 
+    @Autowired
+    private MailgunSender mailgunSender;
+
     public Page<Dipendente> getAllDipendenteList(int page, int size, String sortBy) {
         if (size > 100) size = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
@@ -43,7 +47,11 @@ public class DipendenteService {
         Dipendente newDipendente = new Dipendente(body.nome(), body.cognome(), body.email(), body.username());
         newDipendente.setAvatar("https://ui-avatars.com/api/?name=" + body.nome() + "+" + body.cognome());
         newDipendente.setPassword(bcrypt.encode(body.password()));
-        return dipendenteRepository.save(newDipendente);
+        Dipendente savedDipendente = dipendenteRepository.save(newDipendente);
+        // 4. Invio email di benvenuto
+        mailgunSender.sendRegistrationEmail(savedDipendente);
+
+        return savedDipendente;
     }
 
 
